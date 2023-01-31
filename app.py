@@ -42,16 +42,17 @@ df['kemiskinan_moneter'] = df['kemiskinan_moneter'].str.replace(',','.').replace
 df['ipm'] = df['ipm'].str.replace(',','.').replace(' ','')
 df['jumlah_penduduk'] = df['jumlah_penduduk'].str.replace(' ','')
 df['jumlah_penduduk'] = df['jumlah_penduduk'].str.replace(',','.').replace(' ','')
-df[['mpi', 'kemiskinan_moneter', 'ipm', 'jumlah_penduduk']] = df[['mpi', 'kemiskinan_moneter', 'ipm', 'jumlah_penduduk']].astype(float)
+df['headcount_ratio'] = df['headcount_ratio'].str.replace(',','.')
+df[['mpi', 'kemiskinan_moneter', 'ipm', 'jumlah_penduduk', 'headcount_ratio']] = df[['mpi', 'kemiskinan_moneter', 'ipm', 'jumlah_penduduk', 'headcount_ratio']].astype(float)
 
-st.title('MPI x PMI (2019-2021)')
+st.title('VISUALISASI MPI (2019-2021)')
 
 pil_c1, pil_c2, pil_c3 = st.columns(3)
 
 with pil_c1:
     pilihan_x = st.selectbox(
         'Pilih Variabel X:',
-        ['Multidimensional Poverty Index', 'Indeks Pembangunan Manusia','Jumlah Penduduk'],
+        ['Multidimensional Poverty Index', 'Indeks Pembangunan Manusia','Jumlah Penduduk', 'Headcount Ratio'],
         index=0)
 
     if pilihan_x == 'Multidimensional Poverty Index':
@@ -60,11 +61,13 @@ with pil_c1:
         pilihan_x = 'ipm'
     elif pilihan_x == 'Jumlah Penduduk':
         pilihan_x = 'jumlah_penduduk'
+    elif pilihan_x == 'Headcount Ratio':
+        pilihan_x = 'headcount_ratio'
     
 with pil_c2:
     pilihan_y = st.selectbox(
         'Pilih Variabel Y:',
-        ['Multidimensional Poverty Index', 'Indeks Pembangunan Manusia', 'Jumlah Penduduk'],
+        ['Multidimensional Poverty Index', 'Indeks Pembangunan Manusia', 'Jumlah Penduduk', 'Headcount Ratio'],
         index=1)
 
     if pilihan_y == 'Multidimensional Poverty Index':
@@ -73,11 +76,13 @@ with pil_c2:
         pilihan_y = 'ipm'
     elif pilihan_y == 'Jumlah Penduduk':
         pilihan_y = 'jumlah_penduduk'
+    elif pilihan_y == 'Headcount Ratio':
+        pilihan_y = 'headcount_ratio'
 
 with pil_c3:
     pilihan_size = st.selectbox(
         'Pilih Variabel Size:',
-        ['Multidimensional Poverty Index', 'Indeks Pembangunan Manusia', 'Jumlah Penduduk'],
+        ['Multidimensional Poverty Index', 'Indeks Pembangunan Manusia', 'Jumlah Penduduk', 'Headcount Ratio'],
         index=2)
 
     if pilihan_size == 'Multidimensional Poverty Index':
@@ -86,21 +91,23 @@ with pil_c3:
         pilihan_size = 'ipm'
     elif pilihan_size == 'Jumlah Penduduk':
         pilihan_size = 'jumlah_penduduk'
+    elif pilihan_size == 'Headcount Ratio':
+        pilihan_size = 'headcount_ratio'
 
 st.write('---')
 
 # Show Fig
 fig = px.scatter(df, x=pilihan_x, y=pilihan_y, color="provinsi", size=pilihan_size, animation_frame="tahun", hover_data=['mpi'], width=750, height=800,
-        labels=dict(mpi="MPI", ipm="IPM", provinsi="Provinsi", tahun="Tahun", jumlah_penduduk="Jumlah Penduduk"))
+        labels=dict(mpi="MPI", ipm="IPM", provinsi="Provinsi", tahun="Tahun", jumlah_penduduk="Jumlah Penduduk", headcount_ratio='Headcount Ratio'))
 
-fig.add_annotation(text='Luas Lingkaran = Jumlah Penduduk', 
-                    align='left',
-                    showarrow=False,
-                    xref='paper',
-                    yref='paper',
-                    x=0.02,
-                    y=0.02,
-                    bordercolor='black',
-                    borderwidth=1)
+# fig.add_annotation(text='Luas Lingkaran = Jumlah Penduduk', 
+#                     align='left',
+#                     showarrow=False,
+#                     xref='paper',
+#                     yref='paper',
+#                     x=0.02,
+#                     y=0.02,
+#                     bordercolor='black',
+#                     borderwidth=1)
 
 st.plotly_chart(fig, use_container_width=True)
